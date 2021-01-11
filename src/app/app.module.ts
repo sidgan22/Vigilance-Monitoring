@@ -14,7 +14,11 @@ import { HighchartsChartModule } from 'highcharts-angular';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HighchartsChartModule],
+  imports: [BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    HighchartsChartModule,
+  ],
   providers: [
     StatusBar,
     SplashScreen,

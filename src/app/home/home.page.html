@@ -1,3 +1,12 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>Working with p5.js</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="canvasContainer" class="canvas-container"></div>
+</ion-content> -->
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
@@ -15,33 +24,18 @@
 
   <div id="container">
 
-    <h3>Oscillating Sine Wave</h3>
-    <ion-row>
-      <ion-col size="3">
-        <ion-list *ngFor='let l1 of sw1'>
-          <ion-item>
-            <ion-label>{{l1}}</ion-label>
-          </ion-item>
-        </ion-list>
-        <!-- <canvas #lineCanvas1></canvas> -->
-      </ion-col>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>PSD</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <canvas #lineCanvas1></canvas>
+      </ion-card-content>
+    </ion-card>
+    <ion-item hidden id="txt">{{finalres}}
+    </ion-item>
+    <ion-button (click)="saveTESToCSV()" id="test">Download text as file !</ion-button>
 
-      <ion-col size="3">
-        <ion-list *ngFor='let l2 of sw2'>
-          <ion-item>
-            <ion-label>{{l2}}</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-
-      <ion-col size="3">
-        <ion-list *ngFor='let l3 of signal'>
-          <ion-item>
-            <ion-label>{{l3}}</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-    </ion-row>
 
   </div>
 </ion-content>

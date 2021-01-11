@@ -1,3 +1,82 @@
+// import { Component, OnInit, ElementRef } from '@angular/core';
+
+// import * as p5 from 'p5';
+
+// @Component({
+//   selector: 'app-home',
+//   templateUrl: 'home.page.html',
+//   styleUrls: ['home.page.scss'],
+// })
+// export class HomePage implements OnInit {
+
+//   curve: any;
+//   canvasSizeX = 720;
+//   canvasSizeY = 400;
+
+//   private ID = 'HomePage';
+//   log(func, line = '') {
+//     console.log(this.ID + '::' + func + '|' + line);
+//   }
+
+//   constructor(
+//     private el: ElementRef
+//   ) {
+//     this.log('constructor');
+//   }
+
+//   ngOnInit() {
+//     this.log('ngOnInit');
+
+//     const p5obj = new p5(p => {
+//       p.setup = () => {
+//         this.setup(p);
+//       };
+//       p.draw = () => {
+//         this.draw(p);
+//       };
+//     }, this.el.nativeElement);
+//   }
+
+//   setup(p) {
+//     this.log('setup');
+
+//     const c = document.querySelector('#canvasContainer');
+//     p
+//       .createCanvas(this.canvasSizeX, this.canvasSizeY)
+//       .parent(c);
+//   }
+
+//   polygon(p, x, y, radius, npoints, color) {
+//     const angle = p.TWO_PI / npoints;
+//     p.beginShape();
+
+//     p.fill(color);
+//     for (let a = 0; a < p.TWO_PI; a += angle) {
+//       const sx = x + Math.cos(a) * radius;
+//       const sy = y + Math.sin(a) * radius;
+//       p.vertex(sx, sy);
+//     }
+//     p.endShape(p.CLOSE);
+//   }
+
+//   draw_figure(p, scaleX, scaleY, divisor, radius, npoints, color) {
+//     p.push();
+//     p.translate(this.canvasSizeX * scaleX, this.canvasSizeY * scaleY);
+//     p.rotate(p.frameCount / divisor);
+//     this.polygon(p, 0, 0, radius, npoints, color);
+//     p.pop();
+//   }
+
+//   draw(p) {
+//     p.
+//       background('white');
+
+//     this.draw_figure(p, 0.2, 0.5, 200.0, 82, 3, 'red');
+//     this.draw_figure(p, 0.5, 0.5, 50.0, 80, 20, 'blue');
+//     this.draw_figure(p, 0.8, 0.5, -100.0, 70, 7, 'green');
+//   }
+// }
+
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
 import { Filesystem } from '@capacitor/core/dist/esm/web/filesystem';
@@ -7,6 +86,9 @@ import { Chart } from 'chart.js';
 import 'chartjs-plugin-zoom';
 import { generate } from 'rxjs';
 import { ThrowStmt } from '@angular/compiler';
+import * as p5 from 'p5';
+import { Ptor } from 'protractor';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -21,48 +103,48 @@ export class HomePage {
 
   ionViewDidEnter() {
 
-    // this.lineChart1 = new Chart(this.lineCanvas1.nativeElement, {
+    this.lineChart1 = new Chart(this.lineCanvas1.nativeElement, {
 
-    //   type: "line",
-    //   options: {
-    //     zoom: {
-    //       enabled: true,
-    //       drag: false,
-    //       mode: "xy",
-    //       limits: {
-    //         max: 10,
-    //         min: 0.5
-    //       }
-    //     }
-    //   },
-    //   data: {
-    //     labels: this.times,
-    //     datasets: [
-    //       {
-    //         label: "My First dataset",
-    //         fill: false,
-    //         lineTension: 0.1,
-    //         backgroundColor: "rgba(75,192,192,0.4)",
-    //         borderColor: "rgba(75,192,192,1)",
-    //         borderCapStyle: "butt",
-    //         borderDash: [],
-    //         borderDashOffset: 0.0,
-    //         borderJoinStyle: "miter",
-    //         pointBorderColor: "rgba(75,192,192,1)",
-    //         pointBackgroundColor: "#fff",
-    //         pointBorderWidth: 1,
-    //         pointHoverRadius: 5,
-    //         pointHoverBackgroundColor: "rgba(75,192,192,1)",
-    //         pointHoverBorderColor: "rgba(220,220,220,1)",
-    //         pointHoverBorderWidth: 2,
-    //         pointRadius: 1,
-    //         pointHitRadius: 10,
-    //         data: this.sw1,
-    //         spanGaps: false,
-    //       }
-    //     ]
-    //   }
-    // });
+      type: "line",
+      options: {
+        zoom: {
+          enabled: true,
+          drag: false,
+          mode: "xy",
+          limits: {
+            max: 10,
+            min: 0.5
+          }
+        }
+      },
+      data: {
+        labels: this.times,
+        datasets: [
+          {
+            label: "My First dataset",
+            fill: true,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: "butt",
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: "miter",
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: this.finalres,
+            spanGaps: false,
+          }
+        ]
+      }
+    });
     // this.lineChart2 = new Chart(this.lineCanvas2.nativeElement, {
 
     //   type: "line",
@@ -109,24 +191,27 @@ export class HomePage {
   @ViewChild("lineCanvas1") lineCanvas1: ElementRef;
 
   @ViewChild("lineCanvas2") lineCanvas2: ElementRef;
-
+  private el: ElementRef
   private lineChart1: Chart;
   private lineChart2: Chart;
   resi: number[];
   resr: number[];
+  finalres = [];
   constructor() {
+
     this.generateSample();
   }
 
   generateSample() {
     let f1 = 5;
     let f2 = 10;
-
-    let t = 0.004;
+    let fs = 250;
+    let t = 1 / fs;
     let T = 30;
     let i = 0;
-    while (i <= 10) {
-      this.times.push(i);
+    let k = 1;
+    while (i <= T) {
+      this.times.push(k);
       var s1 = Math.sin(2 * Math.PI * f1 * i);
       var s2 = Math.sin(2 * Math.PI * f2 * i);
       var s3 = s1 + s2;
@@ -136,24 +221,44 @@ export class HomePage {
       this.dummy.push(0);
       console.log(s1, s2, s3);
       i += t;
+      k += 1;
     }
+    this.times = this.times.splice(0, this.times.length / 2);
     console.log('SW1');
     console.log(this.sw1);
 
     console.log('SW2');
     console.log(this.sw2);
-
-    console.log('Transformed')
-    console.log("Arr Length:" + this.signal.length +
-      "\nLast element" + this.signal[this.signal.length - 1]);
-
+    console.log('Transformed');
     [this.resr, this.resi] = this.transform(this.signal, this.dummy);
     console.log('RES-REAL' + this.resr);
+    console.log('RES-IMAG' + this.resi);
+    let intm;
+    for (let i = 0; i < this.resi.length / 2; i++) {
+      intm = (Math.abs(this.resr[i]) + Math.abs(this.resi[i]))
+
+      intm = (2 / this.resr.length) * intm;
+      this.finalres.push(intm);
+    }
+    console.log('FInal' + this.finalres);
+
   }
+  download_txt() {
+    var textToSave = document.getElementById('txt').innerHTML;
+    var hiddenElement = document.createElement('a');
+
+    hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'myFile.txt';
+    hiddenElement.click();
+  }
+
+  /* 
+* Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
+* The vector can have any length. This is a wrapper function.
+*/
   transform(real: Array<number> | Float64Array, imag: Array<number> | Float64Array) {
     var resr, resi;
-
-    console.log('Entered Transform');
     const n: number = real.length;
     if (n != imag.length)
       throw "Mismatched lengths";
@@ -163,7 +268,7 @@ export class HomePage {
       [resr, resi] = this.transformRadix2(real, imag);
     else  // More complicated algorithm for arbitrary sizes
       [resr, resi] = this.transformBluestein(real, imag);
-    return [resr, resi];
+    return [resi, resr];
   }
 
 
@@ -172,10 +277,8 @@ export class HomePage {
    * The vector can have any length. This is a wrapper function. This transform does not perform scaling, so the inverse is not a true inverse.
    */
   inverseTransform(real: Array<number> | Float64Array, imag: Array<number> | Float64Array) {
-    var resr, resi;
-    console.log('Entered invTransform');
-    [resr, resi] = this.transform(imag, real);
-    return [resr, resi];
+
+    return this.transform(imag, real);
   }
 
 
@@ -184,7 +287,6 @@ export class HomePage {
    * The vector's length must be a power of 2. Uses the Cooley-Tukey decimation-in-time radix-2 algorithm.
    */
   transformRadix2(real: Array<number> | Float64Array, imag: Array<number> | Float64Array) {
-    console.log('Entered Radix2');
     // Length variables
     const n: number = real.length;
     if (n != imag.length)
@@ -220,7 +322,6 @@ export class HomePage {
       }
     }
 
-
     // Cooley-Tukey decimation-in-time radix-2 FFT
     for (let size = 2; size <= n; size *= 2) {
       const halfsize: number = size / 2;
@@ -238,8 +339,6 @@ export class HomePage {
       }
     }
     return [real, imag];
-
-
     // Returns the integer whose value is the reverse of the lowest 'width' bits of the integer 'val'.
     function reverseBits(val: number, width: number): number {
       let result: number = 0;
@@ -258,7 +357,6 @@ export class HomePage {
    * Uses Bluestein's chirp z-transform algorithm.
    */
   transformBluestein(real: Array<number> | Float64Array, imag: Array<number> | Float64Array) {
-    console.log('Entered BLSTEIN');
     // Find a power-of-2 convolution length m such that m >= n * 2 + 1
     const n: number = real.length;
     if (n != imag.length)
@@ -295,12 +393,14 @@ export class HomePage {
     // Convolution
     let creal = new Array<number>(m);
     let cimag = new Array<number>(m);
-    this.convolveComplex(areal, aimag, breal, bimag, creal, cimag);
+
+    let cr, ci: any;
+    [cr, ci] = this.convolveComplex(areal, aimag, breal, bimag, creal, cimag);
 
     // Postprocessing
     for (let i = 0; i < n; i++) {
-      real[i] = creal[i] * cosTable[i] + cimag[i] * sinTable[i];
-      imag[i] = -creal[i] * sinTable[i] + cimag[i] * cosTable[i];
+      real[i] = cr[i] * cosTable[i] + ci[i] * sinTable[i];
+      imag[i] = -cr[i] * sinTable[i] + ci[i] * cosTable[i];
     }
     return [real, imag];
   }
@@ -309,14 +409,11 @@ export class HomePage {
   /* 
    * Computes the circular convolution of the given real vectors. Each vector's length must be the same.
    */
-  convolveReal(xvec: Array<number> | Float64Array, yvec: Array<number> | Float64Array, outvec: Array<number> | Float64Array) {
-    var resr, resi;
-    console.log('Entered convReal');
+  convolveReal(xvec: Array<number> | Float64Array, yvec: Array<number> | Float64Array, outvec: Array<number> | Float64Array): void {
     const n: number = xvec.length;
     if (n != yvec.length || n != outvec.length)
       throw "Mismatched lengths";
-    [resr, resi] = this.convolveComplex(xvec, this.newArrayOfZeros(n), yvec, this.newArrayOfZeros(n), outvec, this.newArrayOfZeros(n));
-    return [resr, resi];
+    this.convolveComplex(xvec, this.newArrayOfZeros(n), yvec, this.newArrayOfZeros(n), outvec, this.newArrayOfZeros(n));
   }
 
 
@@ -327,7 +424,7 @@ export class HomePage {
     xreal: Array<number> | Float64Array, ximag: Array<number> | Float64Array,
     yreal: Array<number> | Float64Array, yimag: Array<number> | Float64Array,
     outreal: Array<number> | Float64Array, outimag: Array<number> | Float64Array) {
-    console.log('Entered convComplex');
+
     const n: number = xreal.length;
     if (n != ximag.length || n != yreal.length || n != yimag.length
       || n != outreal.length || n != outimag.length)
@@ -345,7 +442,7 @@ export class HomePage {
       ximag[i] = ximag[i] * yreal[i] + xreal[i] * yimag[i];
       xreal[i] = temp;
     }
-    [xreal, ximag] = this.inverseTransform(xreal, ximag);
+    this.inverseTransform(xreal, ximag);
 
     for (let i = 0; i < n; i++) {  // Scaling (because this FFT implementation omits it)
       outreal[i] = xreal[i] / n;
@@ -361,22 +458,31 @@ export class HomePage {
       result.push(0);
     return result;
   }
+
+
   async saveTESToCSV(samples: number[] | Float64Array) {
     let filename = 'FFT' + '.csv';
 
     const headers = 'current';
-    const csvData = headers + '\n' + samples.join('\n');
+    const csvData = headers + '\n' + this.finalres.join('\n');
+    document.getElementById('txt').innerHTML = csvData;
+    var textToSave = document.getElementById('txt').innerHTML;
+    var hiddenElement = document.createElement('a');
 
-    Filesystem.writeFile({
-      path: filename,
-      data: csvData,
-      directory: FilesystemDirectory.Documents,
-      encoding: FilesystemEncoding.UTF8
-    }).then(
-      () => {
-        console.log('Completed Save');
-      }
-    );
+    hiddenElement.href = 'data:attachment/csv,' + encodeURI(textToSave);
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'myFile.csv';
+    hiddenElement.click();
+    // Filesystem.writeFile({
+    //   path: filename,
+    //   data: csvData,
+    //   directory: FilesystemDirectory.Documents,
+    //   encoding: FilesystemEncoding.UTF8
+    // }).then(
+    //   () => {
+    //     console.log('Completed Save');
+    //   }
+    // );
   }
 
 }
