@@ -8,20 +8,20 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
-import { HighchartsChartModule } from 'highcharts-angular';
+import { BLE } from '@ionic-native/ble/ngx';
+import { MuseService } from 'src/providers/MuseService';
+import { BLEService } from 'src/providers/BLEService';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule,
-    IonicModule.forRoot(),
-    AppRoutingModule,
-    HighchartsChartModule,
-  ],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [
     StatusBar,
     SplashScreen,
+    BLE,
+    MuseService,
+    BLEService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

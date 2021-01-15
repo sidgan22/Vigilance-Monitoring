@@ -1,7 +1,7 @@
 {
-  "name": "fyp",
+  "name": "dveeg",
   "integrations": {
-    "capacitor": {}
+    "cordova": {}
   },
   "type": "angular"
 }

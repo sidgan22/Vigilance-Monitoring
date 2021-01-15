@@ -1,16 +1,7 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>Working with p5.js</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <div id="canvasContainer" class="canvas-container"></div>
-</ion-content> -->
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Driver Vigilance
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -26,15 +17,30 @@
 
     <ion-card>
       <ion-card-header>
+        <ion-card-subtitle>BLE: {{BLEconnectionStatus}}</ion-card-subtitle>
         <ion-card-title>PSD</ion-card-title>
       </ion-card-header>
-      <ion-card-content>
-        <canvas #lineCanvas1></canvas>
+      <ion-card-content [hidden]='wincounter <= 6'>
+        Drowsy : {{drowsinessFlag}}
       </ion-card-content>
     </ion-card>
-    <ion-item hidden id="txt">{{finalres}}
-    </ion-item>
-    <ion-button (click)="saveTESToCSV()" id="test">Download text as file !</ion-button>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Timer: {{winTimer}}
+        </ion-card-title>
+      </ion-card-header>
+    </ion-card>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>{{eyeStatus[wincounter]}}</ion-card-subtitle>
+        <ion-card-title>{{thetaBandPower}} -- {{alphaBandPower}}
+        </ion-card-title>
+      </ion-card-header>
+    </ion-card>
+    <ion-button (click)="connectMuse()">ConnectMuse</ion-button>
+    <ion-button (click)="disconnectMuse()">DisconnectMuse</ion-button>
+    <ion-button (click)="startTimer()">Start Timer</ion-button>
+    <ion-button (click)="stopTimer()">Stop Timer</ion-button>
 
 
   </div>

@@ -1,257 +1,260 @@
-// import { Component, OnInit, ElementRef } from '@angular/core';
 
-// import * as p5 from 'p5';
-
-// @Component({
-//   selector: 'app-home',
-//   templateUrl: 'home.page.html',
-//   styleUrls: ['home.page.scss'],
-// })
-// export class HomePage implements OnInit {
-
-//   curve: any;
-//   canvasSizeX = 720;
-//   canvasSizeY = 400;
-
-//   private ID = 'HomePage';
-//   log(func, line = '') {
-//     console.log(this.ID + '::' + func + '|' + line);
-//   }
-
-//   constructor(
-//     private el: ElementRef
-//   ) {
-//     this.log('constructor');
-//   }
-
-//   ngOnInit() {
-//     this.log('ngOnInit');
-
-//     const p5obj = new p5(p => {
-//       p.setup = () => {
-//         this.setup(p);
-//       };
-//       p.draw = () => {
-//         this.draw(p);
-//       };
-//     }, this.el.nativeElement);
-//   }
-
-//   setup(p) {
-//     this.log('setup');
-
-//     const c = document.querySelector('#canvasContainer');
-//     p
-//       .createCanvas(this.canvasSizeX, this.canvasSizeY)
-//       .parent(c);
-//   }
-
-//   polygon(p, x, y, radius, npoints, color) {
-//     const angle = p.TWO_PI / npoints;
-//     p.beginShape();
-
-//     p.fill(color);
-//     for (let a = 0; a < p.TWO_PI; a += angle) {
-//       const sx = x + Math.cos(a) * radius;
-//       const sy = y + Math.sin(a) * radius;
-//       p.vertex(sx, sy);
-//     }
-//     p.endShape(p.CLOSE);
-//   }
-
-//   draw_figure(p, scaleX, scaleY, divisor, radius, npoints, color) {
-//     p.push();
-//     p.translate(this.canvasSizeX * scaleX, this.canvasSizeY * scaleY);
-//     p.rotate(p.frameCount / divisor);
-//     this.polygon(p, 0, 0, radius, npoints, color);
-//     p.pop();
-//   }
-
-//   draw(p) {
-//     p.
-//       background('white');
-
-//     this.draw_figure(p, 0.2, 0.5, 200.0, 82, 3, 'red');
-//     this.draw_figure(p, 0.5, 0.5, 50.0, 80, 20, 'blue');
-//     this.draw_figure(p, 0.8, 0.5, -100.0, 70, 7, 'green');
-//   }
-// }
-
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
-import { Filesystem } from '@capacitor/core/dist/esm/web/filesystem';
-import { HighchartsChartModule, HighchartsChartComponent } from 'highcharts-angular';
-import * as Highcharts from 'highcharts';
-import { Chart } from 'chart.js';
-import 'chartjs-plugin-zoom';
-import { generate } from 'rxjs';
-import { ThrowStmt } from '@angular/compiler';
-import * as p5 from 'p5';
-import { Ptor } from 'protractor';
+import { Component, ElementRef, NgZone, ViewChild } from '@angular/core';
+import { MuseService, EEG_FREQUENCY, SAMPLING_PERIOD } from 'src/providers/MuseService';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
+
 export class HomePage {
   times: Array<number> = [];
   signal: Array<number> = [];
-  sw1: Array<number> = [];
-  sw2: Array<number> = [];
+  cumSignal: Array<number> = [];
   dummy: Array<number> = [];
-
-  ionViewDidEnter() {
-
-    this.lineChart1 = new Chart(this.lineCanvas1.nativeElement, {
-
-      type: "line",
-      options: {
-        zoom: {
-          enabled: true,
-          drag: false,
-          mode: "xy",
-          limits: {
-            max: 10,
-            min: 0.5
-          }
-        }
-      },
-      data: {
-        labels: this.times,
-        datasets: [
-          {
-            label: "My First dataset",
-            fill: true,
-            lineTension: 0.1,
-            backgroundColor: "rgba(75,192,192,0.4)",
-            borderColor: "rgba(75,192,192,1)",
-            borderCapStyle: "butt",
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: "miter",
-            pointBorderColor: "rgba(75,192,192,1)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            data: this.finalres,
-            spanGaps: false,
-          }
-        ]
-      }
-    });
-    // this.lineChart2 = new Chart(this.lineCanvas2.nativeElement, {
-
-    //   type: "line",
-    //   options: {
-    //     zoom: {
-    //       enabled: true,
-    //       drag: false,
-    //       mode: "xy",
-    //       limits: {
-    //         max: 10,
-    //         min: 0.5
-    //       }
-    //     }
-    //   },
-    //   data: {
-    //     labels: this.times,
-    //     datasets: [
-    //       {
-    //         fill: false,
-    //         lineTension: 0.1,
-    //         backgroundColor: "rgba(75,192,192,0.4)",
-    //         borderColor: "rgba(75,192,192,1)",
-    //         borderCapStyle: "butt",
-    //         borderDash: [],
-    //         borderDashOffset: 0.0,
-    //         borderJoinStyle: "miter",
-    //         pointBorderColor: "rgba(75,192,192,1)",
-    //         pointBackgroundColor: "#fff",
-    //         pointBorderWidth: 1,
-    //         pointHoverRadius: 5,
-    //         pointHoverBackgroundColor: "rgba(75,192,192,1)",
-    //         pointHoverBorderColor: "rgba(220,220,220,1)",
-    //         pointHoverBorderWidth: 2,
-    //         pointRadius: 1,
-    //         pointHitRadius: 10,
-    //         data: this.sw2,
-    //         spanGaps: false,
-    //       }
-    //     ]
-    //   }
-    // });
-  }
-  // Data
-  @ViewChild("lineCanvas1") lineCanvas1: ElementRef;
-
-  @ViewChild("lineCanvas2") lineCanvas2: ElementRef;
-  private el: ElementRef
-  private lineChart1: Chart;
-  private lineChart2: Chart;
   resi: number[];
   resr: number[];
   finalres = [];
-  constructor() {
 
-    this.generateSample();
+  drowsinessFlag: string = 'Unknown';
+  drowsinessThreshold = [-1, -1];
+
+
+  eyeStatus = [
+    "Closed",
+    "Closed",
+    "Closed",
+    "Closed",
+    "Closed",
+    "Closed",
+    "Open",
+    "Open",
+    "Open",
+    "Open",
+    "Open",
+    "Open",
+    "Closed",
+    "Closed",
+    "Closed",
+    "Open",
+    "Open",
+    "Open",
+    "Closed",
+    "Closed",
+    "Closed",
+    "Open",
+    "Open",
+    "Open",
+    "Closed",
+    "Closed",
+    "Open",
+    "Open",
+    "Closed",
+    "Closed",
+    "Open",
+    "Open",]
+  alphaBand = [8, 13];
+  thetaBand = [4, 8];
+  thetaBandPower = 0;
+  alphaBandPower = 0;
+  thetaBandPowers = [];
+  alphaBandPowers = [];
+
+  //Muse related var
+  private BLEconnectionStatus: number = -1;
+  winLength: number = 5;
+  wincnt: number = 50;
+  wincounter = 0;
+  closeBaselineCnt: number = 6;
+
+  public winTimer: number = this.winLength;
+  public winInterval: any;
+
+
+  @ViewChild("lineCanvas1") lineCanvas1: ElementRef;
+  private el: ElementRef
+
+  constructor(
+    private muse: MuseService,
+    private ngZone: NgZone
+  ) {
+    // this.generateSample(); if no muse and directly try a reference sinusoid
   }
 
-  generateSample() {
-    let f1 = 5;
-    let f2 = 10;
-    let fs = 250;
-    let t = 1 / fs;
-    let T = 30;
-    let i = 0;
-    let k = 1;
-    while (i <= T) {
-      this.times.push(k);
-      var s1 = Math.sin(2 * Math.PI * f1 * i);
-      var s2 = Math.sin(2 * Math.PI * f2 * i);
-      var s3 = s1 + s2;
-      this.sw1.push(s1);
-      this.sw2.push(s2);
-      this.signal.push(s3);
-      this.dummy.push(0);
-      console.log(s1, s2, s3);
-      i += t;
-      k += 1;
+  ionViewDidEnter() {
+    this.muse.connectionStatus.subscribe(
+      (status) => {
+        this.ngZone.run(() =>
+          this.BLEconnectionStatus = status);
+        if (status == 1) {
+          this.onDeviceConnected();
+        } else if (status == 0) {
+          this.onDeviceDisconnected('');
+        }
+      }
+    );
+  }
+
+  ionViewDidLeave() {
+    this.disconnectMuse();
+  }
+
+  //MUSE functions start
+
+  onDeviceConnected() {
+    console.log('Device Connected');
+    this.ngZone.run(() => {
+      this.BLEconnectionStatus = 1;
+    });
+    this.eegSubscribe();
+    this.muse.startNotifications();
+  }
+
+  eegSubscribe() {
+    setTimeout(() => {
+      this.muse.eegReadings.subscribe(
+        (reading) => {
+          try {
+            // console.log('eegSubscribe');
+            let idx = this.signal.length;
+            if (reading.electrode == 1) {
+              for (let i = 0; i < 12; i++) {
+                this.dummy.push(0);
+                this.cumSignal.push(Number(reading.samples[i].toFixed(2)));
+                this.signal[idx + i] = reading.samples[i];
+              }
+            }
+          } catch (error) {
+            console.log('Muse reading Error')
+          }
+        }
+      );
+    }, 500);
+  }
+
+  onDeviceDisconnected(err) {
+    console.log('Device Disconnected');
+
+    this.ngZone.run(() => {
+      this.BLEconnectionStatus = 0;
+    });
+  }
+
+  disconnectMuse() {
+    this.muse.ble.disconnect(null, this.muse.registeredID, null, null);
+  }
+
+  connectMuse() {
+    this.muse.scan().subscribe();
+  }
+
+  startTimer() {
+    this.signal = [];
+    this.dummy = [];
+    this.finalres = [];
+    this.musestart();
+    console.log(this.winTimer);
+    this.winInterval = setInterval(() => {
+      this.updateTimer();
+    }, 1000);
+
+  }
+
+  async updateTimer() {
+    if (this.winTimer > 0) {
+      this.winTimer = this.winTimer - 1;
     }
-    this.times = this.times.splice(0, this.times.length / 2);
-    console.log('SW1');
-    console.log(this.sw1);
+    else {
+      clearInterval(this.winInterval);
+      this.wincounter += 1;
+      await this.musestop();
+      this.winTimer = this.winLength;
+      setTimeout(() => this.startTimer(), 500);
+    }
+  }
 
-    console.log('SW2');
-    console.log(this.sw2);
-    console.log('Transformed');
+  musestart() {
+    setTimeout(async () => { await this.muse.start(); }, 500);
+  }
+
+  async musestop() {
+    await this.muse.pause();
+    this.calcDrowsiness();
+  }
+
+
+  //Muse functions end
+
+  //// Drowsiness Calculation
+  calcDrowsiness() {
     [this.resr, this.resi] = this.transform(this.signal, this.dummy);
-    console.log('RES-REAL' + this.resr);
-    console.log('RES-IMAG' + this.resi);
     let intm;
-    for (let i = 0; i < this.resi.length / 2; i++) {
+    for (let i = 0; i < this.resi.length; i++) {
       intm = (Math.abs(this.resr[i]) + Math.abs(this.resi[i]))
-
       intm = (2 / this.resr.length) * intm;
       this.finalres.push(intm);
     }
-    console.log('FInal' + this.finalres);
 
-  }
-  download_txt() {
-    var textToSave = document.getElementById('txt').innerHTML;
-    var hiddenElement = document.createElement('a');
 
-    hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'myFile.txt';
-    hiddenElement.click();
+    this.ngZone.run(() => {
+      this.thetaBandPower = this.cumulateBandPower(this.thetaBand);
+      this.alphaBandPower = this.cumulateBandPower(this.alphaBand);
+
+      this.thetaBandPowers.push(this.thetaBandPower);
+      this.alphaBandPowers.push(this.alphaBandPower);
+
+      if (this.wincounter < this.closeBaselineCnt) {
+        this.drowsinessFlag = 'Baselining';
+      }
+      else if (this.wincounter == this.closeBaselineCnt) {
+        this.drowsinessThreshold[0] = this.average(this.thetaBandPowers);
+        this.drowsinessThreshold[1] = this.average(this.alphaBandPowers);
+      }
+      else {
+        if ((this.thetaBandPower <= this.drowsinessThreshold[0]) || (this.alphaBandPower <= this.drowsinessThreshold[1])) {
+          this.drowsinessFlag = 'True';
+        }
+        else {
+          this.drowsinessFlag = 'False';
+        }
+      }
+    });
+
+    // this.saveEEGToCSV(this.finalres);
   }
+
+  stopTimer() {
+    this.muse.stopNotifications()
+    console.log(this.thetaBandPowers + '=' + this.alphaBandPowers);
+    // console.log("" + this.cumSignal);
+  }
+
+  average(myarr: number[]): number {
+    let tmp = 0;
+    for (let i = 0; i < myarr.length; i++) {
+      tmp += myarr[i];
+    }
+    tmp = tmp / myarr.length;
+    return tmp
+  }
+
+  cumulateBandPower(band: number[]): number {
+    let bandPower = 0;
+    let freqRes = EEG_FREQUENCY / (this.resi.length - 1);
+    let startIdx = Math.round(1 + band[0] / freqRes);
+    let endIdx = Math.round(1 + band[1] / freqRes);
+    console.log("FreqRange: " + band[0] + ":" + band[1] + " indices = " + startIdx + ":" + endIdx);
+
+    for (let index = startIdx; index < endIdx; index++) {
+      bandPower += this.finalres[index];
+    }
+
+    return bandPower;
+  }
+
+
+  ////FFT related functions
 
   /* 
 * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
@@ -271,7 +274,6 @@ export class HomePage {
     return [resi, resr];
   }
 
-
   /* 
    * Computes the inverse discrete Fourier transform (IDFT) of the given complex vector, storing the result back into the vector.
    * The vector can have any length. This is a wrapper function. This transform does not perform scaling, so the inverse is not a true inverse.
@@ -280,7 +282,6 @@ export class HomePage {
 
     return this.transform(imag, real);
   }
-
 
   /* 
    * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
@@ -350,7 +351,6 @@ export class HomePage {
     }
   }
 
-
   /* 
    * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
    * The vector can have any length. This requires the convolution function, which in turn requires the radix-2 FFT function.
@@ -405,7 +405,6 @@ export class HomePage {
     return [real, imag];
   }
 
-
   /* 
    * Computes the circular convolution of the given real vectors. Each vector's length must be the same.
    */
@@ -415,7 +414,6 @@ export class HomePage {
       throw "Mismatched lengths";
     this.convolveComplex(xvec, this.newArrayOfZeros(n), yvec, this.newArrayOfZeros(n), outvec, this.newArrayOfZeros(n));
   }
-
 
   /* 
    * Computes the circular convolution of the given complex vectors. Each vector's length must be the same.
@@ -460,9 +458,43 @@ export class HomePage {
   }
 
 
-  async saveTESToCSV(samples: number[] | Float64Array) {
-    let filename = 'FFT' + '.csv';
+  //// Reference Signal Generation
+  generateSample() {
+    let f1 = 5;
+    let f2 = 10;
+    let f3 = 25;
+    let T = 10;
+    let i = 0;
+    let k = 0;
+    while (i <= T) {
+      this.times.push(k);
+      var s1 = Math.sin(2 * Math.PI * f1 * i);
+      var s2 = Math.sin(2 * Math.PI * f2 * i);
+      var s3 = Math.sin(2 * Math.PI * f3 * i);
+      var s4 = s1 + s2 + s3;
+      this.signal.push(s4);
+      this.dummy.push(0);
+      i += SAMPLING_PERIOD;
+      k += 1;
+    }
+    this.times = this.times.splice(0, this.times.length / 2);
+    console.log('Transformed');
+    [this.resr, this.resi] = this.transform(this.signal, this.dummy);
+    console.log('RES-REAL' + this.resr);
+    console.log('RES-IMAG' + this.resi);
+    let intm;
+    for (let i = 0; i < this.resi.length / 2; i++) {
+      intm = (Math.abs(this.resr[i]) + Math.abs(this.resi[i]))
 
+      intm = (2 / this.resr.length) * intm;
+      this.finalres.push(intm);
+    }
+    console.log('FInal' + this.finalres);
+
+  }
+
+
+  async saveEEGToCSV(samples: number[] | Float64Array) {
     const headers = 'current';
     const csvData = headers + '\n' + this.finalres.join('\n');
     document.getElementById('txt').innerHTML = csvData;
@@ -471,18 +503,9 @@ export class HomePage {
 
     hiddenElement.href = 'data:attachment/csv,' + encodeURI(textToSave);
     hiddenElement.target = '_blank';
-    hiddenElement.download = 'myFile.csv';
+    hiddenElement.download = 'win' + this.wincounter + '.csv';
     hiddenElement.click();
-    // Filesystem.writeFile({
-    //   path: filename,
-    //   data: csvData,
-    //   directory: FilesystemDirectory.Documents,
-    //   encoding: FilesystemEncoding.UTF8
-    // }).then(
-    //   () => {
-    //     console.log('Completed Save');
-    //   }
-    // );
+
   }
 
 }
