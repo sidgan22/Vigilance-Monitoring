@@ -492,7 +492,7 @@ export class HomePage {
     console.log('RES-IMAG' + this.resi);
     let intm;
     for (let i = 0; i < this.resi.length / 2; i++) {
-      intm = (Math.abs(this.resr[i]) + Math.abs(this.resi[i]))
+      intm = Math.sqrt((this.resr[i] * this.resr[i]) + (this.resi[i] * this.resi[i]))
 
       intm = (2 / this.resr.length) * intm;
       this.finalres.push(intm);
