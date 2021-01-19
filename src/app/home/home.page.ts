@@ -53,7 +53,15 @@ export class HomePage {
     "Closed",
     "Closed",
     "Open",
-    "Open",]
+    "Open",
+    "Closed",
+    "Open",
+    "Closed",
+    "Closed",
+    "Open",
+    "Closed",
+    "Open",
+    "OVERRRRR"]
   alphaBand = [8, 13];
   thetaBand = [4, 8];
   thetaBandPower = 0;
@@ -250,7 +258,7 @@ export class HomePage {
       bandPower += this.finalres[index];
     }
 
-    return bandPower;
+    return Number(bandPower.toFixed(2));
   }
 
 
